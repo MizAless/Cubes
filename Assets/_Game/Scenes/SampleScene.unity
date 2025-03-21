@@ -420,6 +420,7 @@ MonoBehaviour:
   - {r: 0.4659799, g: 0.5518868, b: 0.48564732, a: 1}
   _mainCamera: {fileID: 519420031}
   _cubeDragger: {fileID: 11333651}
+  _clickInput: {fileID: 152287414}
 --- !u!114 &144486801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -462,6 +463,50 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &152287413
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 152287415}
+  - component: {fileID: 152287414}
+  m_Layer: 0
+  m_Name: ClickInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &152287414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152287413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be1f68239ece4a9b8bea2e455c32b983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &152287415
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152287413}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.2039311, y: -0.10885309, z: -9.700012}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1338,3 +1383,4 @@ SceneRoots:
   - {fileID: 485290621}
   - {fileID: 108446908}
   - {fileID: 11333652}
+  - {fileID: 152287415}

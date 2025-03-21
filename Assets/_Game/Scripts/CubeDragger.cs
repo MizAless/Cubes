@@ -1,15 +1,19 @@
+using System;
 using UnityEngine;
 using Zenject;
 
 namespace _Game.Scripts
 {
-    public class CubeDragger : MonoBehaviour
+    public class CubeDragger : MonoBehaviour, IDisposable
     {
         private Camera _mainCamera;
+        private CubeSpawner _cubeSpawner;
+
+        private Cube _draggingCube;
 
         private bool _isDragging = false;
-
-        private Cube _draggingCube = null;
+        
+        private ClickInput _clickInput;
 
         private void Update()
         {
@@ -18,9 +22,17 @@ namespace _Game.Scripts
         }
 
         [Inject]
-        public void Construct(Camera mainCamera)
+        public void Construct(ClickInput clickInput, Camera mainCamera)
         {
             _mainCamera = mainCamera;
+            _clickInput = clickInput;
+            
+            _clickInput.CubeClicked += StartDragging;
+        }
+
+        public void Dispose()
+        {
+            _clickInput.CubeClicked -= StartDragging;
         }
 
         public void StartDragging(Cube cube)
@@ -40,7 +52,7 @@ namespace _Game.Scripts
             Vector3 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
             _draggingCube.transform.position = new Vector3(mousePosition.x, mousePosition.y, _draggingCube.transform.position.z);
         }
-        
+
         private void TryStopDragging()
         {
             if (!_isDragging)
