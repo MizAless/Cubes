@@ -11,13 +11,15 @@ namespace _Game.Scripts
             _cubesPool = cubesPool;
         }
         
-        public void Spawn(Vector3 position, Color color)
+        public Cube Spawn(Vector3 position, Color color)
         {
             var cube = _cubesPool.Get();
             cube.Init(color);
             cube.SetPosition(position);
             
             cube.Destroyed += OnCubeDestroyed;
+            
+            return cube;
         }
 
         private void OnCubeDestroyed(Cube cube)

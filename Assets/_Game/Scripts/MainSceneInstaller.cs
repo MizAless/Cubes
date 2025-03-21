@@ -9,7 +9,8 @@ namespace _Game.Scripts
         [SerializeField] ScrolledCubesPool _scrolledCubesPool;
         [SerializeField] private List<Color> _availableColors = new List<Color>();
         [SerializeField] private Camera _mainCamera;
-
+        [SerializeField] private CubeDragger _cubeDragger;
+        
         public override void InstallBindings()
         {
             Container
@@ -29,10 +30,21 @@ namespace _Game.Scripts
                 .AsSingle()
                 .NonLazy();
 
+            Container
+                .BindInstance(_cubeDragger)
+                .AsSingle()
+                .NonLazy();
+
+            Container
+                .BindInstance(_mainCamera)
+                .AsSingle()
+                .NonLazy();
+
             var pool = Container.Resolve<ScrolledCubesPool>();
             var spawner = Container.Resolve<CubeSpawner>();
+            var cubeDragger = Container.Resolve<CubeDragger>();
 
-            var mediator = new CubeMediator(spawner, pool, _mainCamera);
+            var mediator = new CubeMediator(spawner, pool, cubeDragger, _mainCamera);
         }
 
         private CubeSpawner CreateCubeSpawner()

@@ -5,15 +5,17 @@ namespace _Game.Scripts
 {
     public class CubeMediator : IDisposable
     {
-        private CubeSpawner _cubeSpawner;
+        private readonly CubeSpawner _cubeSpawner;
         private readonly ScrolledCubesPool _scrolledCubesPool;
-        private Camera _mainCamera;
+        private readonly CubeDragger _cubeDragger;
+        private readonly Camera _mainCamera;
 
-        public CubeMediator(CubeSpawner cubeSpawner, ScrolledCubesPool scrolledCubesPool, Camera mainCamera)
+        public CubeMediator(CubeSpawner cubeSpawner, ScrolledCubesPool scrolledCubesPool, CubeDragger cubeDragger, Camera mainCamera)
         {
             _cubeSpawner = cubeSpawner;
             _scrolledCubesPool = scrolledCubesPool;
             _mainCamera = mainCamera;
+            _cubeDragger = cubeDragger;
 
             _scrolledCubesPool.ElementClicked += OnClickled;
         }
@@ -29,7 +31,9 @@ namespace _Game.Scripts
             screenPosition.z = _mainCamera.nearClipPlane;
             Vector3 worldPosition = _mainCamera.ScreenToWorldPoint(screenPosition);
 
-            _cubeSpawner.Spawn(worldPosition, clickedElementData.Color);
+            var cube = _cubeSpawner.Spawn(worldPosition, clickedElementData.Color);
+            
+            _cubeDragger.StartDragging(cube);
         }
     }
 }
