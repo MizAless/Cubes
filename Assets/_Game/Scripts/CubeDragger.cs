@@ -6,13 +6,14 @@ namespace _Game.Scripts
 {
     public class CubeDragger : MonoBehaviour, IDisposable
     {
+        private CubesTower _cubesTower;
         private Camera _mainCamera;
         private CubeSpawner _cubeSpawner;
 
         private Cube _draggingCube;
 
         private bool _isDragging = false;
-        
+
         private ClickInput _clickInput;
 
         private void Update()
@@ -22,8 +23,9 @@ namespace _Game.Scripts
         }
 
         [Inject]
-        public void Construct(ClickInput clickInput, Camera mainCamera)
+        public void Construct(CubesTower cubesTower, ClickInput clickInput, Camera mainCamera)
         {
+            _cubesTower = cubesTower;
             _mainCamera = mainCamera;
             _clickInput = clickInput;
             
@@ -60,6 +62,8 @@ namespace _Game.Scripts
 
             if (!Input.GetMouseButtonUp(0))
                 return;
+            
+            _cubesTower.Push(_draggingCube);
             
             _isDragging = false;
             _draggingCube = null;

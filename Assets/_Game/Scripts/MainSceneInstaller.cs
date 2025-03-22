@@ -11,6 +11,7 @@ namespace _Game.Scripts
         [SerializeField] private Camera _mainCamera;
         [SerializeField] private CubeDragger _cubeDragger;
         [SerializeField] private ClickInput _clickInput;
+        [SerializeField] private Transform _towerLowerPoint;
         
         public override void InstallBindings()
         {
@@ -49,6 +50,12 @@ namespace _Game.Scripts
             Container
                 .Bind<CubeMediator>()
                 .AsSingle()
+                .NonLazy();
+            
+            Container
+                .Bind<CubesTower>()
+                .AsSingle()
+                .WithArguments(_towerLowerPoint)
                 .NonLazy();
 
             // var pool = Container.Resolve<ScrolledCubesPool>();

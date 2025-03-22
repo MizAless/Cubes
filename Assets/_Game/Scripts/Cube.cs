@@ -5,16 +5,18 @@ using UnityEngine.EventSystems;
 namespace _Game.Scripts
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class Cube : MonoBehaviour , IPointerDownHandler
+    public class Cube : MonoBehaviour
     {
         private Color _color;
         private SpriteRenderer _spriteRenderer;
 
-        public event Action<Cube> Clicked;
         public event Action<Cube> Destroyed;
 
+        public float Height { get; private set; }
+        
         private void Awake()
         {
+            Height = transform.localScale.y;
             _spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
@@ -32,18 +34,6 @@ namespace _Game.Scripts
         public void Destroy()
         {
             Destroyed?.Invoke(this);
-        }
-
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            print("Clicked");
-            Clicked?.Invoke(this);
-        }
-
-        private void OnMouseDown()
-        {
-            print("Clicked");
-            Clicked?.Invoke(this);
         }
     }
 }
