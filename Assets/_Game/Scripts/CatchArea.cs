@@ -6,16 +6,18 @@ namespace _Game.Scripts
     [RequireComponent(typeof(Collider2D))]
     public class CatchArea : MonoBehaviour
     {
+        private Transform _transform;
         private BoxCollider2D _catchTrigger;
 
         private List<Cube> _cubes = new List<Cube>();
 
+        public float Width => _transform.localScale.x; 
+        
         private void Awake()
         {
             _catchTrigger = GetComponent<BoxCollider2D>();
+            _transform = transform;
         }
-
-        public BoxCollider2D Collider { get; private set; }
 
         public bool Intersects(Cube cube)
         {

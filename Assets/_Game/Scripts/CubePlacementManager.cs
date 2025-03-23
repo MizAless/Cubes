@@ -27,7 +27,7 @@ namespace _Game.Scripts
         private void OnCubeDragged(Cube cube)
         {
             if (_towerLayoutCatchArea.Intersects(cube))
-                _cubesTower.Push(cube);
+                _cubesTower.AddCube(cube);
             else
                 cube.Destroy();
         }

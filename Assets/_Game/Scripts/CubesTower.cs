@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,19 +9,19 @@ namespace _Game.Scripts
         private readonly Transform _lowerPoint;
         private readonly BoxCollider2D _boxCollider2D;
         private readonly Stack<Cube> _cubesStack = new Stack<Cube>();
+        private readonly CatchArea _layoutCatchArea;
 
         private Vector3 _widthOffset = Vector3.zero;
         private Vector3 _heightOffset;
 
-        public float Width;
-
-        public CubesTower(Transform lowerPoint, BoxCollider2D boxCollider2D)
+        public CubesTower(Transform lowerPoint, BoxCollider2D boxCollider2D, CatchArea layoutCatchArea)
         {
             _lowerPoint = lowerPoint;
             _boxCollider2D = boxCollider2D;
+            _layoutCatchArea = layoutCatchArea;
         }
 
-        public void Push(Cube cube)
+        public void AddCube(Cube cube)
         {
             if (_cubesStack.Count == 0)
             {
@@ -42,14 +41,17 @@ namespace _Game.Scripts
 
             _cubesStack.Push(cube);
 
-            var stackCount = _cubesStack.Count;
-
             _heightOffset = -Vector3.up * cube.Height / 2f;
 
-            cube.transform.position =
-                _lowerPoint.position + _heightOffset + _widthOffset +
-                _lowerPoint.up * (cube.Height * stackCount);
+            var maxWidthOffset = (_layoutCatchArea.Width - cube.Width) / 2f / _layoutCatchArea.Width;
 
+            cube.transform.position = _lowerPoint.position + _heightOffset + _widthOffset +
+                                      _lowerPoint.up * (cube.Height * _cubesStack.Count);
+
+            Vector3 localPositionInCatchArea =
+                _layoutCatchArea.transform.InverseTransformPoint(cube.transform.position);
+            localPositionInCatchArea.x = Mathf.Clamp(localPositionInCatchArea.x, -maxWidthOffset, maxWidthOffset);
+            cube.transform.position = _layoutCatchArea.transform.TransformPoint(localPositionInCatchArea);
             cube.transform.parent = _lowerPoint;
 
             UpdateCollider();
@@ -59,7 +61,7 @@ namespace _Game.Scripts
         {
             float height = _cubesStack.Count * _cubesStack.Peek().Height * 2;
             float width = _cubesStack.Peek().Width;
-            
+
             float minWidthOffest = float.MaxValue;
             float maxWidthOffest = float.MinValue;
 
@@ -72,11 +74,7 @@ namespace _Game.Scripts
                     maxWidthOffest = cube.transform.localPosition.x;
             }
 
-            Debug.Log($"Min: {minWidthOffest}");
-            Debug.Log($"Max: {maxWidthOffest}");
-            Debug.Log($"Max - Min: {maxWidthOffest - minWidthOffest}");
-            
-            _boxCollider2D.offset  = new Vector2((maxWidthOffest + minWidthOffest) / 2f, height / 2f);
+            _boxCollider2D.offset = new Vector2((maxWidthOffest + minWidthOffest) / 2f, height / 2f);
             _boxCollider2D.size = new Vector2(maxWidthOffest - minWidthOffest + width, height);
         }
 

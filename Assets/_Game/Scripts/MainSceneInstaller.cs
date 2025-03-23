@@ -68,7 +68,7 @@ namespace _Game.Scripts
             Container
                 .Bind<CubesTower>()
                 .AsSingle()
-                .WithArguments(_towerLowerPoint, _towerCollider2D)
+                .WithArguments(_towerLowerPoint, _towerCollider2D, _towerLayoutCatchArea)
                 .NonLazy();
 
             // var pool = Container.Resolve<ScrolledCubesPool>();
