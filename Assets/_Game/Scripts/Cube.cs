@@ -13,10 +13,12 @@ namespace _Game.Scripts
         public event Action<Cube> Destroyed;
 
         public float Height { get; private set; }
-        
+        public float Width { get; private set; }
+
         private void Awake()
         {
             Height = transform.localScale.y;
+            Width = transform.localScale.x;
             _spriteRenderer = GetComponent<SpriteRenderer>();
         }
 

@@ -6,13 +6,20 @@ namespace _Game.Scripts
 {
     public class MainSceneInstaller : MonoInstaller
     {
-        [SerializeField] ScrolledCubesPool _scrolledCubesPool;
-        [SerializeField] private List<Color> _availableColors = new List<Color>();
+        [Header("UI")]
+        [SerializeField] private ScrolledCubesPool _scrolledCubesPool;
         [SerializeField] private Camera _mainCamera;
+        [Header("Colors")]
+        [SerializeField] private List<Color> _availableColors = new List<Color>();
+        [Header("Input")]
         [SerializeField] private CubeDragger _cubeDragger;
         [SerializeField] private ClickInput _clickInput;
+        [Header("Tower")]
         [SerializeField] private Transform _towerLowerPoint;
-        
+        [SerializeField] private CatchArea _towerLayoutCatchArea;
+        [SerializeField] private CatchArea _towerCatchArea;
+        [SerializeField] private BoxCollider2D _towerCollider2D;
+
         public override void InstallBindings()
         {
             Container
@@ -41,21 +48,27 @@ namespace _Game.Scripts
                 .BindInstance(_mainCamera)
                 .AsSingle()
                 .NonLazy();
-            
+
             Container
                 .BindInstance(_clickInput)
                 .AsSingle()
                 .NonLazy();
-            
+
             Container
                 .Bind<CubeMediator>()
                 .AsSingle()
                 .NonLazy();
-            
+
+            Container
+                .Bind<CubePlacementManager>()
+                .AsSingle()
+                .WithArguments(_towerLayoutCatchArea, _towerCatchArea)
+                .NonLazy();
+
             Container
                 .Bind<CubesTower>()
                 .AsSingle()
-                .WithArguments(_towerLowerPoint)
+                .WithArguments(_towerLowerPoint, _towerCollider2D)
                 .NonLazy();
 
             // var pool = Container.Resolve<ScrolledCubesPool>();
