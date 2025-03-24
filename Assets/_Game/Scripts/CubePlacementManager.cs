@@ -41,7 +41,9 @@ namespace _Game.Scripts
         {
             if (_towerLayoutCatchArea.Intersects(cube))
             {
-                if (!_cubesTower.Contains(cube))
+                if (!_cubesTower.CanAddCube())
+                    cube.Destroy();
+                else if (!_cubesTower.Contains(cube))
                     _cubesTower.AddCube(cube);
                 else
                     _cubeDragger.CancelDragging();
@@ -55,7 +57,6 @@ namespace _Game.Scripts
             }
             else
                 cube.Destroy();
-            
         }
     }
 }

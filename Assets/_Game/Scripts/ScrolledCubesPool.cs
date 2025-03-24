@@ -1,7 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using ModestTree;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace _Game.Scripts
@@ -9,6 +10,8 @@ namespace _Game.Scripts
     public class ScrolledCubesPool : MonoBehaviour
     {
         [SerializeField] private Transform _cubesContainer;
+        [SerializeField] private float _clickThreshold = 0.1f;
+        [SerializeField] private ScrollRect _scrollRect;
 
         public event Action<ClickedElementData> ElementClicked;
 
@@ -28,6 +31,12 @@ namespace _Game.Scripts
                 uiCubeView.Clickled -= UiCubeViewOnClickled;
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+                _scrollRect.enabled = true;
+        }
+
         [Inject]
         private void Construct(List<Color> _availableColors)
         {
@@ -43,7 +52,23 @@ namespace _Game.Scripts
 
         private void UiCubeViewOnClickled(ClickedElementData clickedElementData)
         {
-            ElementClicked?.Invoke(clickedElementData);
+            StartCoroutine(HandleClick(clickedElementData));
+        }
+        
+        private IEnumerator HandleClick(ClickedElementData clickedElementData)
+        {
+            var startPosition = Input.mousePosition;
+            
+            yield return new WaitForSeconds(_clickThreshold);
+            
+            var delta = Input.mousePosition - startPosition;
+            delta.Normalize();
+            
+            if (Mathf.Abs(delta.y) > Mathf.Abs(delta.x))
+            {
+                _scrollRect.enabled = false;
+                ElementClicked?.Invoke(clickedElementData);
+            }
         }
     }
 }

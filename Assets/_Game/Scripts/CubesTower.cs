@@ -15,16 +15,18 @@ namespace _Game.Scripts
         private readonly Transform _lowerPoint;
         private readonly BoxCollider2D _boxCollider2D;
         private readonly CatchArea _layoutCatchArea;
+        private readonly Camera _mainCamera;
         private readonly List<Cube> _cubesList = new List<Cube>();
 
         private Vector3 _widthOffset = Vector3.zero;
         private Vector3 _heightOffset;
 
-        public CubesTower(Transform lowerPoint, BoxCollider2D boxCollider2D, CatchArea layoutCatchArea)
+        public CubesTower(Transform lowerPoint, BoxCollider2D boxCollider2D, CatchArea layoutCatchArea, Camera mainCamera)
         {
             _lowerPoint = lowerPoint;
             _boxCollider2D = boxCollider2D;
             _layoutCatchArea = layoutCatchArea;
+            _mainCamera = mainCamera;
         }
 
         public void AddCube(Cube cube)
@@ -90,6 +92,16 @@ namespace _Game.Scripts
         public bool Contains(Cube cube)
         {
             return _cubesList.Contains(cube);
+        }
+        
+        public bool CanAddCube()
+        {
+            if (_cubesList.Count == 0)
+                return true;
+            
+            var upperCube = _cubesList.Last();
+
+            return _mainCamera.WorldToViewportPoint(upperCube.transform.position).y < 1;
         }
 
         private static void AnimateFall(Cube cube)

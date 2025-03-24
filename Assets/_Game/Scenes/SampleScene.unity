@@ -1182,6 +1182,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cubesContainer: {fileID: 2030345761}
+  _clickThreshold: 0.1
+  _scrollRect: {fileID: 767470322}
 --- !u!1 &963362272
 GameObject:
   m_ObjectHideFlags: 0
@@ -1997,7 +1999,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 20
+  m_Spacing: 50
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -2113,8 +2115,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1110929175}
   - {fileID: 1393273407}
+  - {fileID: 1110929175}
   m_Father: {fileID: 1243887830}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

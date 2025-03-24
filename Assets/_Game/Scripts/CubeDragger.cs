@@ -10,9 +10,7 @@ namespace _Game.Scripts
         private Camera _mainCamera;
 
         private Cube _draggingCube;
-
         private bool _isDragging = false;
-
         private Vector3 _dragStartPosition;
 
         public event Action<Cube> CubeDragged;
@@ -39,6 +37,9 @@ namespace _Game.Scripts
 
         public void StartDragging(Cube cube)
         {
+            if (!Input.GetKey(KeyCode.Mouse0))
+                cube.Destroy();
+            
             if (_isDragging)
                 return;
 
