@@ -7,18 +7,25 @@ namespace _Game.Scripts
 {
     public class MainSceneInstaller : MonoInstaller
     {
-        [Header("UI")] [SerializeField] private ScrolledCubesPool _scrolledCubesPool;
+        [Header("UI")] 
+        [SerializeField] private ScrolledCubesPool _scrolledCubesPool;
         [SerializeField] private Camera _mainCamera;
-        [Header("Colors")] [SerializeField] private List<Color> _availableColors = new List<Color>();
-        [Header("Input")] [SerializeField] private CubeDragger _cubeDragger;
+        [Header("Colors")] 
+        [SerializeField] private List<Color> _availableColors = new List<Color>();
+        [Header("Input")]
+        [SerializeField] private CubeDragger _cubeDragger;
         [SerializeField] private ClickInput _clickInput;
-        [Header("Tower")] [SerializeField] private Transform _towerLowerPoint;
+        [Header("Tower")] 
+        [SerializeField] private Transform _towerLowerPoint;
         [SerializeField] private CatchArea _towerLayoutCatchArea;
         [SerializeField] private CatchArea _towerCatchArea;
         [SerializeField] private BoxCollider2D _towerCollider2D;
-        [Header("Hole")] [SerializeField] private CubesHole _cubesHole;
+        [Header("Hole")]
+        [SerializeField] private CubesHole _cubesHole;
         [SerializeField] private CatchArea _holeLayoutCatchArea;
-        [SerializeField] private CatchArea _holeCatchArea;
+        [Header("Logger")]
+        [SerializeField] private ActionsTextView _actionsTextView;
+        
         
         public override void InstallBindings()
         {
@@ -62,7 +69,7 @@ namespace _Game.Scripts
             Container
                 .Bind<CubePlacementManager>()
                 .AsSingle()
-                .WithArguments(_towerLayoutCatchArea, _towerCatchArea, _holeLayoutCatchArea, _holeCatchArea)
+                .WithArguments(_towerLayoutCatchArea, _towerCatchArea, _holeLayoutCatchArea)
                 .NonLazy();
 
             Container
@@ -74,6 +81,12 @@ namespace _Game.Scripts
             Container
                 .BindInstance(_cubesHole)
                 .AsSingle()
+                .NonLazy();
+            
+            Container
+                .Bind<Logger>()
+                .AsSingle()
+                .WithArguments(_actionsTextView)
                 .NonLazy();
 
             var filePath = Path.Combine(Application.persistentDataPath, "cubes_save.json");

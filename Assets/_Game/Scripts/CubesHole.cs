@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ namespace _Game.Scripts
     {
         [SerializeField] private SpriteMask _downMask;
 
+        public event Action Dropped;
+        
         public void DropCube(Cube cube) 
         {
             var startPosition = cube.transform.position.WithY(transform.position.y + 5f);
@@ -22,6 +25,8 @@ namespace _Game.Scripts
             cube.transform.DOMove(endPosition, 1f)
                 .SetEase(Ease.InSine)
                 .OnComplete(cube.Destroy);
+            
+            Dropped?.Invoke();
         }
     }
 }

@@ -34,6 +34,7 @@ namespace _Game.Scripts
 
         public event Action CubeAdded;
         public event Action CubeRemoved;
+        public event Action TowerFulled;
 
         public void AddCube(Cube cube)
         {
@@ -64,7 +65,8 @@ namespace _Game.Scripts
 
             cube.transform.parent = _lowerPoint;
             CubeAdded?.Invoke();
-            AnimateFall(cube);
+
+            cube.AnimateFall(CubeFallHeight, CubeFallDuration);
             UpdateCollider();
         }
 
@@ -77,7 +79,7 @@ namespace _Game.Scripts
 
             _cubesList.RemoveAt(cubeIndex);
             CubeRemoved?.Invoke();
-            
+
             for (int i = cubeIndex; i < _cubesList.Count; i++)
             {
                 var fallingCube = _cubesList[i];
@@ -90,12 +92,15 @@ namespace _Game.Scripts
                     var downCube = _cubesList[i - 1];
                     GameMath.ClampPositionRegardingObject(fallingCube.transform, 0, downCube.transform);
                 }
-
-                CubeRemoved?.Invoke();
-                AnimateFall(fallingCube);
             }
 
+            CubeRemoved?.Invoke();
             UpdateCollider();
+
+            for (int i = cubeIndex; i < _cubesList.Count; i++)
+            {
+                _cubesList[i].AnimateFall(CubeFallHeight, CubeFallDuration);
+            }
         }
 
         public bool Contains(Cube cube)
@@ -110,7 +115,12 @@ namespace _Game.Scripts
 
             var upperCube = _cubesList.Last();
 
-            return _mainCamera.WorldToViewportPoint(upperCube.transform.position).y < 1;
+            var canAdd = _mainCamera.WorldToViewportPoint(upperCube.transform.position).y < 1;
+
+            if (!canAdd)
+                TowerFulled?.Invoke();
+
+            return canAdd;
         }
 
         public void AddLoadedCube(Cube cube)

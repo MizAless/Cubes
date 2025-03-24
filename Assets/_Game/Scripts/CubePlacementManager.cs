@@ -8,16 +8,14 @@ namespace _Game.Scripts
         private readonly CatchArea _towerLayoutCatchArea;
         private readonly CatchArea _towerCatchArea;
         private readonly CatchArea _holeLayoutCatchArea;
-        private readonly CatchArea _holeCatchArea;
         private readonly CubesTower _cubesTower;
         private readonly CubesHole _cubesHole;
 
         public CubePlacementManager(
             CubeDragger cubeDragger,
-            CatchArea towerLayoutCatchArea, 
-            CatchArea towerCatchArea, 
-            CatchArea holeLayoutCatchArea, 
-            CatchArea holeCatchArea, 
+            CatchArea towerLayoutCatchArea,
+            CatchArea towerCatchArea,
+            CatchArea holeLayoutCatchArea,
             CubesTower cubesTower,
             CubesHole cubesHole)
         {
@@ -25,12 +23,13 @@ namespace _Game.Scripts
             _towerLayoutCatchArea = towerLayoutCatchArea;
             _towerCatchArea = towerCatchArea;
             _holeLayoutCatchArea = holeLayoutCatchArea;
-            _holeCatchArea = holeCatchArea;
             _cubesTower = cubesTower;
             _cubesHole = cubesHole;
 
             _cubeDragger.CubeDragged += OnCubeDragged;
         }
+        
+        public event Action CubeMissed;
 
         public void Dispose()
         {
@@ -40,23 +39,49 @@ namespace _Game.Scripts
         private void OnCubeDragged(Cube cube)
         {
             if (_towerLayoutCatchArea.Intersects(cube))
-            {
-                if (!_cubesTower.CanAddCube())
-                    cube.Destroy();
-                else if (!_cubesTower.Contains(cube))
-                    _cubesTower.AddCube(cube);
-                else
-                    _cubeDragger.CancelDragging();
-            }
+                ChooseTowerAction(cube);
             else if (_holeLayoutCatchArea.Intersects(cube))
-            {
-                if (_cubesTower.Contains(cube))
-                    _cubesTower.RemoveCube(cube);
-                    
-                _cubesHole.DropCube(cube);
-            }
+                ChooseHoleAction(cube);
             else
                 cube.Destroy();
+        }
+
+        private void ChooseTowerAction(Cube cube)
+        {
+            if (_cubesTower.CubesList.Count == 0)
+            {
+                _cubesTower.AddCube(cube);
+                return;
+            }
+
+            if (_cubesTower.Contains(cube))
+            {
+                _cubeDragger.CancelDragging();
+                return;
+            }
+
+            if (!_cubesTower.CanAddCube())
+            {
+                cube.Destroy();
+                return;
+            }
+
+            if (_towerCatchArea.Intersects(cube))
+            {
+                _cubesTower.AddCube(cube);
+                return;
+            }
+
+            cube.DestroyWithAnimation();
+            CubeMissed?.Invoke();
+        }
+
+        private void ChooseHoleAction(Cube cube)
+        {
+            if (_cubesTower.Contains(cube))
+                _cubesTower.RemoveCube(cube);
+
+            _cubesHole.DropCube(cube);
         }
     }
 }

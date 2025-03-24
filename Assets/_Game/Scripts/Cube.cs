@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -47,9 +48,31 @@ namespace _Game.Scripts
             _overlaySpriteRenderer.maskInteraction = maskInteraction;
         }
 
+        public void AnimateFall(float height, float duration)
+        {
+            var endPoint = transform.position;
+            var startPoint = transform.position + Vector3.up * height;
+
+            transform.position = startPoint;
+
+            transform.DOMove(endPoint, duration)
+                .SetEase(Ease.InSine);
+        }
+
         public void Destroy()
         {
             Destroyed?.Invoke(this);
+        }
+
+        public void DestroyWithAnimation()
+        {
+            AnimateFall(2f,0.5f);
+            
+            _overlaySpriteRenderer.DOFade(1, 0.5f)
+                .SetEase(Ease.InSine);
+            
+            _spriteRenderer.DOFade(0, 0.5f)
+                .SetEase(Ease.InSine).OnComplete(Destroy);
         }
     }
 }
