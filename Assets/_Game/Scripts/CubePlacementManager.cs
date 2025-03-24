@@ -7,14 +7,27 @@ namespace _Game.Scripts
         private readonly CubeDragger _cubeDragger;
         private readonly CatchArea _towerLayoutCatchArea;
         private readonly CatchArea _towerCatchArea;
+        private readonly CatchArea _holeLayoutCatchArea;
+        private readonly CatchArea _holeCatchArea;
         private readonly CubesTower _cubesTower;
+        private readonly CubesHole _cubesHole;
 
-        public CubePlacementManager(CubeDragger cubeDragger, CatchArea towerLayoutCatchArea, CatchArea towerCatchArea, CubesTower cubesTower)
+        public CubePlacementManager(
+            CubeDragger cubeDragger,
+            CatchArea towerLayoutCatchArea, 
+            CatchArea towerCatchArea, 
+            CatchArea holeLayoutCatchArea, 
+            CatchArea holeCatchArea, 
+            CubesTower cubesTower,
+            CubesHole cubesHole)
         {
             _cubeDragger = cubeDragger;
             _towerLayoutCatchArea = towerLayoutCatchArea;
             _towerCatchArea = towerCatchArea;
+            _holeLayoutCatchArea = holeLayoutCatchArea;
+            _holeCatchArea = holeCatchArea;
             _cubesTower = cubesTower;
+            _cubesHole = cubesHole;
 
             _cubeDragger.CubeDragged += OnCubeDragged;
         }
@@ -28,6 +41,8 @@ namespace _Game.Scripts
         {
             if (_towerLayoutCatchArea.Intersects(cube))
                 _cubesTower.AddCube(cube);
+            else if (_holeLayoutCatchArea.Intersects(cube))
+                _cubesHole.DropCube(cube);
             else
                 cube.Destroy();
         }

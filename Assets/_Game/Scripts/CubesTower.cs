@@ -25,15 +25,15 @@ namespace _Game.Scripts
         {
             if (_cubesStack.Count == 0)
             {
-                _lowerPoint.position = NewVectorWithX(_lowerPoint.position, cube.transform.position.x);
+                _lowerPoint.position = _lowerPoint.position.WithX(cube.transform.position.x);
             }
             else
             {
                 var upperCube = _cubesStack.Peek();
 
                 var directionFromPivotToUpperCubeOnHorizontalAxis =
-                    NewVectorWithY(upperCube.transform.position, 0) -
-                    NewVectorWithY(_lowerPoint.transform.position, 0);
+                    upperCube.transform.position.WithY(0) -
+                    _lowerPoint.transform.position.WithY(0);
 
                 _widthOffset = directionFromPivotToUpperCubeOnHorizontalAxis +
                                Vector3.right * Random.Range(-upperCube.Width / 2f, upperCube.Width / 2f);
@@ -43,15 +43,11 @@ namespace _Game.Scripts
 
             _heightOffset = -Vector3.up * cube.Height / 2f;
 
-            var maxWidthOffset = (_layoutCatchArea.Width - cube.Width) / 2f / _layoutCatchArea.Width;
-
             cube.transform.position = _lowerPoint.position + _heightOffset + _widthOffset +
                                       _lowerPoint.up * (cube.Height * _cubesStack.Count);
 
-            Vector3 localPositionInCatchArea =
-                _layoutCatchArea.transform.InverseTransformPoint(cube.transform.position);
-            localPositionInCatchArea.x = Mathf.Clamp(localPositionInCatchArea.x, -maxWidthOffset, maxWidthOffset);
-            cube.transform.position = _layoutCatchArea.transform.TransformPoint(localPositionInCatchArea);
+            ClampPositionRegardingObject(cube.transform, cube.Width, _layoutCatchArea.transform);
+
             cube.transform.parent = _lowerPoint;
 
             UpdateCollider();
@@ -78,14 +74,16 @@ namespace _Game.Scripts
             _boxCollider2D.size = new Vector2(maxWidthOffest - minWidthOffest + width, height);
         }
 
-        private Vector3 NewVectorWithX(Vector3 origin, float x)
+        private void ClampPositionRegardingObject(Transform self, float widthOffset, Transform obj)
         {
-            return new Vector3(x, origin.y, origin.z);
-        }
+            var width = obj.localScale.x;
 
-        private Vector3 NewVectorWithY(Vector3 origin, float y)
-        {
-            return new Vector3(origin.x, y, origin.z);
+            var maxWidthOffset = (width - widthOffset) / 2f / width;
+
+            Vector3 localPositionInCatchArea =
+                obj.InverseTransformPoint(self.position);
+            localPositionInCatchArea.x = Mathf.Clamp(localPositionInCatchArea.x, -maxWidthOffset, maxWidthOffset);
+            self.position = obj.TransformPoint(localPositionInCatchArea);
         }
     }
 }

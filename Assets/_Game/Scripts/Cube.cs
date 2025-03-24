@@ -26,11 +26,18 @@ namespace _Game.Scripts
         {
             _color = color;
             _spriteRenderer.color = color;
+            SetMaskable(false);
         }
 
         public void SetPosition(Vector3 position)
         {
             transform.position = position;
+        }
+
+        public void SetMaskable(bool maskable)
+        {
+            _spriteRenderer.maskInteraction =
+                maskable ? SpriteMaskInteraction.VisibleInsideMask : SpriteMaskInteraction.None;
         }
 
         public void Destroy()
