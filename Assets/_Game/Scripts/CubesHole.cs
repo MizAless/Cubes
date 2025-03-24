@@ -15,25 +15,13 @@ namespace _Game.Scripts
             _downMask.enabled = false;
             cube.SetMaskable(true);
 
-            ClampPositionRegardingObject(cube.transform, cube.Width + 0.2f, transform);
+            GameMath.ClampPositionRegardingObject(cube.transform, cube.Width + 0.2f, transform);
 
             var endPosition = transform.position.WithX(cube.transform.position.x) + Vector3.down * 2f;
             
             cube.transform.DOMove(endPosition, 1f)
                 .SetEase(Ease.InSine)
                 .OnComplete(cube.Destroy);
-        }
-
-        private void ClampPositionRegardingObject(Transform self, float widthOffset, Transform obj)
-        {
-            var width = obj.localScale.x;
-
-            var maxWidthOffset = (width - widthOffset) / 2f / width;
-
-            Vector3 localPositionInCatchArea =
-                obj.InverseTransformPoint(self.position);
-            localPositionInCatchArea.x = Mathf.Clamp(localPositionInCatchArea.x, -maxWidthOffset, maxWidthOffset);
-            self.position = obj.TransformPoint(localPositionInCatchArea);
         }
     }
 }

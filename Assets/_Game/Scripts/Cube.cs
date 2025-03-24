@@ -7,6 +7,8 @@ namespace _Game.Scripts
     [RequireComponent(typeof(SpriteRenderer))]
     public class Cube : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer _overlaySpriteRenderer;
+        
         private Color _color;
         private SpriteRenderer _spriteRenderer;
 
@@ -36,8 +38,11 @@ namespace _Game.Scripts
 
         public void SetMaskable(bool maskable)
         {
-            _spriteRenderer.maskInteraction =
+            var maskInteraction = 
                 maskable ? SpriteMaskInteraction.VisibleInsideMask : SpriteMaskInteraction.None;
+
+            _spriteRenderer.maskInteraction = maskInteraction;
+            _overlaySpriteRenderer.maskInteraction = maskInteraction;
         }
 
         public void Destroy()

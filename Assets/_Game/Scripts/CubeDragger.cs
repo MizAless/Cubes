@@ -13,6 +13,8 @@ namespace _Game.Scripts
 
         private bool _isDragging = false;
 
+        private Vector3 _dragStartPosition;
+
         public event Action<Cube> CubeDragged;
         
         private void Update()
@@ -40,8 +42,17 @@ namespace _Game.Scripts
             if (_isDragging)
                 return;
 
+            _dragStartPosition = cube.transform.position;
+            
             _isDragging = true;
             _draggingCube = cube;
+        }
+        
+        public void CancelDragging()
+        {
+            _isDragging = false;
+            _draggingCube.transform.position = _dragStartPosition;
+            _draggingCube = null;
         }
 
         private void TryDrag()

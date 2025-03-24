@@ -17,15 +17,15 @@ namespace _Game.Scripts
             _mainCamera = mainCamera;
             _cubeDragger = cubeDragger;
 
-            _scrolledCubesPool.ElementClicked += OnClickled;
+            _scrolledCubesPool.ElementClicked += OnClicked;
         }
 
         public void Dispose()
         {
-            _scrolledCubesPool.ElementClicked -= OnClickled;
+            _scrolledCubesPool.ElementClicked -= OnClicked;
         }
 
-        private void OnClickled(ClickedElementData clickedElementData)
+        private void OnClicked(ClickedElementData clickedElementData)
         {
             Vector3 screenPosition = clickedElementData.EventData.position;
             screenPosition.z = _mainCamera.nearClipPlane;

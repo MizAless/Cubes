@@ -33,16 +33,19 @@ namespace _Game.Scripts
         private bool TryGetCube(out Cube cube)
         {
             cube = null;
-            
-            var hit = Physics2D.Raycast(_mainCamera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (hit.collider == null)
-                return false;
+            var hits = Physics2D.RaycastAll(_mainCamera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (!hit.collider.TryGetComponent(out cube))
-                return false;
-            
-            return true;
+            foreach (var hit in hits)
+            {
+                if (hit.collider == null)
+                    continue;
+
+                if (hit.collider.TryGetComponent(out cube))
+                    break;
+            }
+
+            return cube != null;
         }
     }
 }

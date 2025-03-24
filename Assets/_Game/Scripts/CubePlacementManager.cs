@@ -40,11 +40,22 @@ namespace _Game.Scripts
         private void OnCubeDragged(Cube cube)
         {
             if (_towerLayoutCatchArea.Intersects(cube))
-                _cubesTower.AddCube(cube);
+            {
+                if (!_cubesTower.Contains(cube))
+                    _cubesTower.AddCube(cube);
+                else
+                    _cubeDragger.CancelDragging();
+            }
             else if (_holeLayoutCatchArea.Intersects(cube))
+            {
+                if (_cubesTower.Contains(cube))
+                    _cubesTower.PoolOutCube(cube);
+                    
                 _cubesHole.DropCube(cube);
+            }
             else
                 cube.Destroy();
+            
         }
     }
 }
