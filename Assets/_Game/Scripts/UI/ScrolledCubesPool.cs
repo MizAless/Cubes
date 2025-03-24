@@ -16,7 +16,6 @@ namespace _Game.Scripts
         public event Action<ClickedElementData> ElementClicked;
 
         private List<UICubeView> _cubes = new List<UICubeView>();
-        private ColorService _colorService;
         private UICubeView _uiCubeViewPrefab;
 
         private void OnEnable()

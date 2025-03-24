@@ -62,7 +62,7 @@ namespace _Game.Scripts
                 .NonLazy();
 
             Container
-                .Bind<CubeMediator>()
+                .Bind<ScrolledPoolDraggerMediator>()
                 .AsSingle()
                 .NonLazy();
 

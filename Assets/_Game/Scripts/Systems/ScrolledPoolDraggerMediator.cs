@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace _Game.Scripts
 {
-    public class CubeMediator : IDisposable
+    public class ScrolledPoolDraggerMediator : IDisposable
     {
         private readonly CubeSpawner _cubeSpawner;
         private readonly ScrolledCubesPool _scrolledCubesPool;
         private readonly CubeDragger _cubeDragger;
         private readonly Camera _mainCamera;
 
-        public CubeMediator(CubeSpawner cubeSpawner, ScrolledCubesPool scrolledCubesPool, CubeDragger cubeDragger, Camera mainCamera)
+        public ScrolledPoolDraggerMediator(CubeSpawner cubeSpawner, ScrolledCubesPool scrolledCubesPool, CubeDragger cubeDragger, Camera mainCamera)
         {
             _cubeSpawner = cubeSpawner;
             _scrolledCubesPool = scrolledCubesPool;
