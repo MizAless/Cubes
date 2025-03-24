@@ -51,7 +51,7 @@ namespace _Game.Scripts
             else if (_holeLayoutCatchArea.Intersects(cube))
             {
                 if (_cubesTower.Contains(cube))
-                    _cubesTower.PoolOutCube(cube);
+                    _cubesTower.RemoveCube(cube);
                     
                 _cubesHole.DropCube(cube);
             }

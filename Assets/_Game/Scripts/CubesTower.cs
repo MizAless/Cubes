@@ -21,13 +21,19 @@ namespace _Game.Scripts
         private Vector3 _widthOffset = Vector3.zero;
         private Vector3 _heightOffset;
 
-        public CubesTower(Transform lowerPoint, BoxCollider2D boxCollider2D, CatchArea layoutCatchArea, Camera mainCamera)
+        public CubesTower(Transform lowerPoint, BoxCollider2D boxCollider2D, CatchArea layoutCatchArea,
+            Camera mainCamera)
         {
             _lowerPoint = lowerPoint;
             _boxCollider2D = boxCollider2D;
             _layoutCatchArea = layoutCatchArea;
             _mainCamera = mainCamera;
         }
+
+        public IReadOnlyList<Cube> CubesList => _cubesList;
+
+        public event Action CubeAdded;
+        public event Action CubeRemoved;
 
         public void AddCube(Cube cube)
         {
@@ -57,11 +63,12 @@ namespace _Game.Scripts
             GameMath.ClampPositionRegardingObject(cube.transform, cube.Width, _layoutCatchArea.transform);
 
             cube.transform.parent = _lowerPoint;
+            CubeAdded?.Invoke();
             AnimateFall(cube);
             UpdateCollider();
         }
 
-        public void PoolOutCube(Cube cube)
+        public void RemoveCube(Cube cube)
         {
             if (!_cubesList.Contains(cube))
                 throw new ArgumentException("The cube does not exist in the tower.");
@@ -69,7 +76,8 @@ namespace _Game.Scripts
             int cubeIndex = _cubesList.IndexOf(cube);
 
             _cubesList.RemoveAt(cubeIndex);
-
+            CubeRemoved?.Invoke();
+            
             for (int i = cubeIndex; i < _cubesList.Count; i++)
             {
                 var fallingCube = _cubesList[i];
@@ -83,6 +91,7 @@ namespace _Game.Scripts
                     GameMath.ClampPositionRegardingObject(fallingCube.transform, 0, downCube.transform);
                 }
 
+                CubeRemoved?.Invoke();
                 AnimateFall(fallingCube);
             }
 
@@ -93,15 +102,22 @@ namespace _Game.Scripts
         {
             return _cubesList.Contains(cube);
         }
-        
+
         public bool CanAddCube()
         {
             if (_cubesList.Count == 0)
                 return true;
-            
+
             var upperCube = _cubesList.Last();
 
             return _mainCamera.WorldToViewportPoint(upperCube.transform.position).y < 1;
+        }
+
+        public void AddLoadedCube(Cube cube)
+        {
+            _cubesList.Add(cube);
+            cube.transform.parent = _lowerPoint;
+            UpdateCollider();
         }
 
         private static void AnimateFall(Cube cube)

@@ -14,6 +14,8 @@ namespace _Game.Scripts
 
         public event Action<Cube> Destroyed;
 
+        public Color Color => _color;
+        
         public float Height { get; private set; }
         public float Width { get; private set; }
 

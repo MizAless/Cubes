@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using System.IO;
 
 namespace _Game.Scripts
 {
@@ -18,7 +19,7 @@ namespace _Game.Scripts
         [Header("Hole")] [SerializeField] private CubesHole _cubesHole;
         [SerializeField] private CatchArea _holeLayoutCatchArea;
         [SerializeField] private CatchArea _holeCatchArea;
-
+        
         public override void InstallBindings()
         {
             Container
@@ -74,6 +75,22 @@ namespace _Game.Scripts
                 .BindInstance(_cubesHole)
                 .AsSingle()
                 .NonLazy();
+
+            var filePath = Path.Combine(Application.persistentDataPath, "cubes_save.json");
+            
+            Container
+                .Bind<Saver>()
+                .AsSingle()
+                .WithArguments(filePath)
+                .NonLazy();
+            
+            Container
+                .Bind<Loader>()
+                .AsSingle()
+                .WithArguments(filePath)
+                .NonLazy();
+            
+            Container.Resolve<Loader>().LoadData();
         }
 
         private CubeSpawner CreateCubeSpawner()
